@@ -1,8 +1,10 @@
+#define debounce_ms 50
+
 const int red_led = 10;
 const int green_led = 5;
 const int button = 3;
 
-const int debounce_ms = 50;
+
 
 const int time_range_ms[] = {400, 1200};
 
@@ -19,19 +21,17 @@ void setup(){
   Serial.begin(115200);
 }
 
-void ready(){
-  digitalWrite(green_led, HIGH);
-  digitalWrite(red_led, LOW);
+int debounce_digitalRead(int pin){
+  int prev = digitalRead(pin);
+
+  delay(debounce_ms + random(-10,10));
+
+  return (prev == digitalRead(pin)) ? prev : debounce_digitalRead(pin);
 }
 
-void steady(){
-  digitalWrite(green_led, LOW);
-  digitalWrite(red_led, LOW);
-}
-
-void fire(){
-  digitalWrite(green_led, LOW);
-  digitalWrite(red_led, HIGH);
+void ledWrite(int _green_led_value, int _red_led_value){
+  digitalWrite(green_led, _green_led_value);
+  digitalWrite(red_led, _red_led_value);
 }
 
 bool countdown(int contador){
@@ -48,23 +48,22 @@ bool countdown(int contador){
 void loop(){
 
   // Ready
-  ready();
+  ledWrite(HIGH, LOW);
 
   // Wait for ONE input (no debouncing affects here)
   while (digitalRead(button) == LOW){
-    delay(1);
+    // ¯\_(ツ)_/¯
   }
 
   // Wait until button release
-  while (digitalRead(button) == HIGH){
-    // Debounce
-    delay(debounce_ms + random(-10,10));
+  while (debounce_digitalRead(button) == HIGH){
+    // ¯\_(ツ)_/¯
   }
 
 
 
   // Steady
-  steady();
+  ledWrite(LOW, LOW);
 
 
 
@@ -73,7 +72,7 @@ void loop(){
 
   if(countdown(contador)){
     // Fire
-    fire();
+    ledWrite(LOW, HIGH);
 
     // Get current time
     time = millis();
@@ -84,7 +83,7 @@ void loop(){
     time = millis() - time;
 
     // Apagamos led rojo
-    digitalWrite(red_led, LOW);
+    ledWrite(LOW, LOW);
 
     // Print time
     Serial.print(time);
@@ -104,8 +103,8 @@ void loop(){
   }
 
   // Wait for button release
-  while (digitalRead(button) == HIGH){
-    delay(1);
+  while (debounce_digitalRead(button) == HIGH){
+    // ¯\_(ツ)_/¯
   }
 
 }
