@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/alonso/.arduino15/packages/arduino/tools/**",
+                "/home/alonso/.arduino15/packages/arduino/hardware/avr/1.8.2/**",
+                "/home/alonso/.arduino15/packages/arduino/hardware/avr/1.8.2/libraries/**",
+                "/home/alonso/TERCERO/DHI/libraries/**",
+                "/home/alonso/TERCERO/DHI/libraries/MsTimer2"
+            ],
+            "forcedInclude": [
+                "/home/alonso/.arduino15/packages/arduino/hardware/avr/1.8.2/cores/arduino/Arduino.h"
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "defines": [
+                "USBCON"
+            ]
+        }
+    ],
+    "version": 4
+}
