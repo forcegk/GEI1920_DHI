@@ -24,7 +24,8 @@ void setup(){
 int debounce_digitalRead(int pin){
   int prev = digitalRead(pin);
 
-  delay(debounce_ms + random(-10,10));
+  //delay(debounce_ms + random(-10,10));
+  delay(debounce_ms);
 
   return (prev == digitalRead(pin)) ? prev : debounce_digitalRead(pin);
 }
