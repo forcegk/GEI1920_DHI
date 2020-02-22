@@ -53,7 +53,7 @@ void sumar_uno(){
 
       if(r1.h>23){
         // Reset de horas
-        r1.h = 0;//TODO Llamar a modo bajo consumo
+        r1.h = 0;
       }
     }
   }
