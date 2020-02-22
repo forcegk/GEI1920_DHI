@@ -105,7 +105,7 @@ void loop(){
 
   // Wait for button release
   while (debounce_digitalRead(button) == HIGH){
-    // ¯\_(ツ)_/¯
+    // ¯\_(ツ)_/¯ Roi was here
   }
 
 }
