@@ -117,6 +117,11 @@ void go_to_sleep(){
   }
 
   sleep_disable();
+  
+  // Limpiamos el buffer por si nos han mandado basura
+  while(Serial.peek() != -1){
+      Serial.read();
+    }
 }
 
 /**************************** PIN READ & LED ****************************/
