@@ -79,7 +79,7 @@ void pin3_interrupt(){
     // Desactivamos la interruptión
     detachInterrupt(digitalPinToInterrupt(button));
     //Serial.print("Interrupt detached! Status:"); Serial.println(power_on);
-    //Serial.flush();
+    Serial.flush();
     power_on = true;
   }
 }
