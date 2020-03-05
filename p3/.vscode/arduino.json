@@ -2,5 +2,5 @@
     "programmer": "AVRISP mkII",
     "board": "arduino:avr:uno",
     "port": "/dev/ttyACM0",
-    "sketch": "p2.ino"
+    "sketch": "p3.ino"
 }
