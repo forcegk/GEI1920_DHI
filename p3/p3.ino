@@ -6,12 +6,17 @@
 #define default_p2 2
 #define default_p3 5
 #define default_p4 10
+#define premios_no 4  
 
 #define i2c_address 0x38
 
+const uint8_t button = 7;
+uint8_t premio;
+uint8_t premios[premios_no] = {default_p1, default_p2, default_p3, default_p4};
+
 /**************************** PIN READ & LED ****************************/
-int debounce_digitalRead(int pin){
-  int prev = digitalRead(pin);
+int debounce_digitalRead(uint8_t pin){
+  uint8_t prev = digitalRead(pin);
 
   //delay(debounce_ms + random(-10,10));
   delay(debounce_ms);
@@ -44,13 +49,36 @@ void i2c_write(uint8_t led_r_l){
   Wire.endTransmission();
 }
 
+void do_animation(uint8_t premio){
+  
+}
+
 void setup(){
   // Enable serial interface
   Serial.begin(115200);
   Wire.begin();
+
+  pinMode(button, INPUT);
 }
 
 void loop(){
+
+  while(debounce_digitalRead(button) == LOW){
+    // NADA
+  }
+  while(debounce_digitalRead(button) == HIGH){
+    // NADA DE NUEVO
+  }
+
+  /* SELECCIÓN DE PREMIO */
+
+  premio = 0; //Reseteamos el valor de premio
+  while( premios[(premio = random(1, 1+premios_no))] <= 0 ){}
+  premios[premio] -= 1;
+
+  do_animation(premio);
+  
+  
   i2c_write(1);
   delay(1000);
   i2c_write(2);
