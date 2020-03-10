@@ -1,4 +1,7 @@
 #include <Wire.h>
+#include <LiquidCrystal.h>
+#include <EEPROM.h>
+#include <avr/wdt.h>
 
 #define debounce_ms 50
 
@@ -12,7 +15,8 @@
 
 const uint8_t button = 7;
 uint8_t premio;
-uint8_t premios[premios_no] = {default_p1, default_p2, default_p3, default_p4};
+uint8_t premios[premios_no];
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 /**************************** PIN READ & LED ****************************/
 int debounce_digitalRead(uint8_t pin){
@@ -29,6 +33,10 @@ void i2c_write(uint8_t led_r_l){
   Wire.beginTransmission(i2c_address);
 
   switch(led_r_l){
+    case (uint8_t) 0:
+      Wire.write(0b1111);
+      break;
+
     case (uint8_t) 1:
       Wire.write(0b1110);
       break;
@@ -50,42 +58,114 @@ void i2c_write(uint8_t led_r_l){
 }
 
 void do_animation(uint8_t premio){
-  
+  uint8_t saltos_fast = random(28, 32);
+  uint8_t delta_t     = random(10, 12);
+  uint16_t v0         = 100;
+  float accel         = 6;
+
+  uint8_t ajuste      = (saltos_fast + delta_t)%premios_no;
+  if(ajuste==0){
+    ajuste = 4;
+  }
+
+  // Fase lineal
+  for(uint8_t i = 0; i<saltos_fast; i++){
+    i2c_write((i%premios_no)+1);
+    delay(v0);
+  }
+
+  // Reseteamos el wd porque no es menos de 8S
+  wdt_reset();
+
+  // Fase de deceleración y selección
+  for(uint8_t t = 1; t<=(delta_t + (((int)(premio-ajuste))%4)); t++){
+    i2c_write( ((((saltos_fast-1%premios_no)+1)+t-1)%premios_no)+1 );
+
+    delay(((int) round((float) (v0*t)+(float) ((1/2)*accel*t*t))));
+  }
+
+  // Reseteamos el wd porque no es menos de 8S
+  wdt_reset();
+
+  // Parpadear
+  for(uint8_t i=0; i<15; i++){
+    i2c_write(0);
+    delay(100);
+    i2c_write(premio);
+    delay(100);
+  }
+
+}
+
+void write_prizes(){
+  lcd.setCursor(0, 0);
+  lcd.print("P1: "); lcd.print(premios[0]);
+  lcd.setCursor(8, 0);
+  lcd.print("P2: "); lcd.print(premios[1]);
+  lcd.setCursor(0, 1);
+  lcd.print("P3: "); lcd.print(premios[2]);
+  lcd.setCursor(8, 1);
+  lcd.print("P4: "); lcd.print(premios[3]); lcd.print(" ");
 }
 
 void setup(){
+  wdt_disable();
+
   // Enable serial interface
   Serial.begin(115200);
   Wire.begin();
+  lcd.begin(16, 2);
+  analogWrite(6,60);
 
   pinMode(button, INPUT);
+
+  if(digitalRead(button) == HIGH){
+    EEPROM.update(0, (uint8_t) default_p1);
+    EEPROM.update(1, (uint8_t) default_p2);
+    EEPROM.update(2, (uint8_t) default_p3);
+    EEPROM.update(3, (uint8_t) default_p4);
+  };
+
+  // Cargar los premios
+  for(uint8_t i=0; i<4; i++){
+    premios[i]=EEPROM.read(i);
+  }
+
+  wdt_enable(WDTO_8S);
+
 }
 
 void loop(){
+  
+  i2c_write(0);
 
+  write_prizes();
+
+  while(debounce_digitalRead(button) == HIGH){
+    // (ESTE LO PONEMOS POR SI INICIAMOS CON EL PULSADOR ENCENDIDO)
+    wdt_reset();
+  }
   while(debounce_digitalRead(button) == LOW){
-    // NADA
+    // NADA DE NUEVO
+    wdt_reset();
   }
   while(debounce_digitalRead(button) == HIGH){
-    // NADA DE NUEVO
+    // NADA OTRA VEZ
+    wdt_reset();
   }
 
   /* SELECCIÓN DE PREMIO */
 
-  premio = 0; //Reseteamos el valor de premio
-  while( premios[(premio = random(1, 1+premios_no))] <= 0 ){}
+  //premio = 0; //Reseteamos el valor de premio
+  // TODO cambiar algoritmo de selección
+  while( premios[(premio = random(0, premios_no))] <= 0 ){
+    // AQUÍ *NO* RESETEAMOS EL WATCHDOG 
+  }
   premios[premio] -= 1;
 
-  do_animation(premio);
-  
-  
-  i2c_write(1);
-  delay(1000);
-  i2c_write(2);
-  delay(1000);
-  i2c_write(3);
-  delay(1000);
-  i2c_write(4);
-  delay(1000);
+  do_animation(premio+1);
 
+  // Actualizamos el valor en la EEPROM;
+  EEPROM.update(premio, (uint8_t) (EEPROM.read(premio)-1));
+  wdt_reset();
 }
