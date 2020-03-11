@@ -1,4 +1,4 @@
-const uint8_t monkey[8] = {
+uint8_t monkey[8] = {
         B01110,
         B01110,
         B00100,
@@ -8,7 +8,7 @@ const uint8_t monkey[8] = {
         B01010,
         B10001
 };
-const uint8_t mon_trapped[8] = {
+uint8_t mon_trapped[8] = {
         B10001,
         B10001,
         B11011,
@@ -18,7 +18,7 @@ const uint8_t mon_trapped[8] = {
         B10101,
         B01110
 };
-const uint8_t trap[8] = {
+uint8_t trap[8] = {
         B11111,
         B11111,
         B11111,
@@ -28,7 +28,7 @@ const uint8_t trap[8] = {
         B11111,
         B11111
 };
-const uint8_t tiger[8] = {
+uint8_t tiger[8] = {
         B10001,
         B01110,
         B10001,
@@ -38,7 +38,7 @@ const uint8_t tiger[8] = {
         B01010,
         B00100
 };
-const uint8_t bananas[8] = {
+uint8_t bananas[8] = {
         B10101,
         B10101,
         B10101,

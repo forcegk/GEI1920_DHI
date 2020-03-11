@@ -3,7 +3,7 @@
 // J.J.Lamas. 2019.
 
 // Arduino pin numbers
-const int SW_pin = 8; // digital pin connected to switch output
+const int SW_pin = 7; // digital pin connected to switch output
 const int X_pin = 0; // analog pin connected to X output
 const int Y_pin = 1; // analog pin connected to Y output
 
