@@ -1,5 +1,4 @@
 #include <LiquidCrystal.h>
-#include "lcd_icons.hpp"
 
 #define debounce_ms 15
 
@@ -36,6 +35,57 @@ typedef mono tigre;
 mono m;
 platanos plat;
 tigre tig;
+
+uint8_t monkey[8] = {
+        B01110,
+        B01110,
+        B00100,
+        B01110,
+        B10101,
+        B00100,
+        B01010,
+        B10001
+};
+uint8_t mon_trapped[8] = {
+        B10001,
+        B10001,
+        B11011,
+        B10001,
+        B01010,
+        B11011,
+        B10101,
+        B01110
+};
+uint8_t trap[8] = {
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111
+};
+uint8_t tiger[8] = {
+        B10001,
+        B01110,
+        B10001,
+        B10101,
+        B00100,
+        B10001,
+        B01010,
+        B00100
+};
+uint8_t bananas[8] = {
+        B10101,
+        B10101,
+        B10101,
+        B00000,
+        B10101,
+        B10101,
+        B10101,
+        B00000
+};
 
 /**************************** PIN READ & LED ****************************/
 int debounce_digitalRead(uint8_t pin){
@@ -120,7 +170,6 @@ void redraw(){
     tig.y = m.y;
     plat.y = (m.y+1)%2;
   }
-  
 
   for(uint8_t j=0; j<2; j++){
     //mostramos el tiempo
