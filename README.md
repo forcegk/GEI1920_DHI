@@ -4,6 +4,7 @@
 - [x] Práctica 2
 - [x] Práctica 3
 - [x] Práctica 4
-- [ ] Práctica 5
+- [x] Práctica 5
+- [ ] Práctica 6
 
 - [x] TGR 1
