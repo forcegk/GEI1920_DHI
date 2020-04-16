@@ -2,7 +2,7 @@
 
 // Valores constantes
 const float pi= 3.1416;
-const unsigned int N= 100; // Número de muestras por ciclo
+const unsigned int N= 200; // Número de muestras por ciclo
 const unsigned int Ts= 5; // Intervalo entre muestras en ms
 // Período de la señal T= N*Ts (ms)
 
@@ -79,7 +79,6 @@ void execute_function( void (*f)(void) ){
 void generar(){
   execute_function(signals[curr_sig-1]);
 
-  // Envía dato muestra señal cada Ts ms
   Serial.println(x); //  Envía muestra señal a serial plotter
 
   if (++n== N) { // Incrementa índice n de muestra

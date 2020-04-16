@@ -21,7 +21,7 @@ void loop(){ // El bucle principal no hace nada
 
 // Rutina de atención de interrupción de Timer2 cada Ts ms
 void generar2(){
-  x= 2.5 + 1.25*sin(20*pi*n/N);
+  x= 2.5 + 1.25*cos(20*pi*n/N);
   if (++n== N) { // Incrementa índice n de muestra
     n= 0;
   }  
