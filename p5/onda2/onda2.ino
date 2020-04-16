@@ -2,7 +2,7 @@
 
 // Valores constantes
 const float pi= 3.1416;
-const unsigned int N= 200; // Número de muestras por ciclo
+const unsigned int N= 100; // Número de muestras por ciclo
 const unsigned int Ts= 5; // Intervalo entre muestras en ms
 // Período de la señal T= N*Ts (ms)
 
