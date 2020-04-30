@@ -147,10 +147,10 @@ void setup() {
 
   // inicializamos temperaturas a cero para no afectar a las medias al principio
   for(unsigned int ta = 0; ta < temp_avg; ta++){
-    temperatures[ta] = 0;
+    temperatures[ta] = 273.15; // damos el valor en K
   }
 
-  Serial.begin(115200);
+  Serial.begin(230400);
 
   MsTimer2::set(Ts, isr); // cada Ts ms
   MsTimer2::start();
