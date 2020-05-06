@@ -21,7 +21,14 @@ double err_cum = 0.0;
 
 // Variables de loop
 uint8_t angulo = 0;
+#ifdef __DEBUG__
+uint8_t prev_angulo = 0;
+#endif
 
+// Función de mapeado de doubles
+double map_double(double x, double in_min, double in_max, double out_min, double out_max){
+    return ( (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min );
+}
 
 // Configuraciones
 void setup(){
@@ -32,7 +39,7 @@ void setup(){
     kp = ki = kd = 0.03;
 
     #ifdef __DEBUG__
-    Serial.begin(230400);
+    Serial.begin(250000);
     #endif
 
     servo.attach(9);
@@ -69,11 +76,12 @@ uint8_t pir(){
         return angulo;
     }else{
         err_cum += err;
+        err_cum = constrain(err_cum, (0.0), (179.0/ki));
         
         // Usamos err_tmp para no realizar calculos dentro de la macro contrain()
         // (es la recomendación que pone en la documentación de arduino así que por si acaso)
         err_tmp = ki*err_cum;
-        err_tmp = constrain(err_tmp, 0.0, 179.9);
+        //err_tmp = constrain(err_tmp, 0.0, 179.0);
 
         err_tmp += kp*err;
         err_tmp += kd*(err-last_err);
@@ -82,17 +90,24 @@ uint8_t pir(){
         
         last_err = err;
         
-        return (uint8_t) floor(new_angulo);
+        return new_angulo;
+        //return (uint8_t) floor(map_double(new_angulo, 0, kp*179+ki*179+kd*2*179, 0, 179.9));
     }
 }
 
 
 void loop(){
+    #ifdef __DEBUG__
+    prev_angulo = angulo;
+    #endif
+
     servo.write(angulo = pir());
 
     #ifdef __DEBUG__
-    Serial.println(angulo);
-    Serial.flush();
+    if(angulo != prev_angulo){
+        Serial.print("Angulo: ");
+        Serial.println(angulo);
+    }
     #endif
 
     delay(40);
