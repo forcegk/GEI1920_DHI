@@ -25,10 +25,12 @@ uint8_t angulo = 0;
 uint8_t prev_angulo = 0;
 #endif
 
+/* Al final no hizo falta, pero la dejo aquí porque es útil para veces siguientes
 // Función de mapeado de doubles
 double map_double(double x, double in_min, double in_max, double out_min, double out_max){
     return ( (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min );
 }
+*/
 
 // Configuraciones
 void setup(){
@@ -80,9 +82,8 @@ uint8_t pir(){
         
         // Usamos err_tmp para no realizar calculos dentro de la macro contrain()
         // (es la recomendación que pone en la documentación de arduino así que por si acaso)
-        err_tmp = ki*err_cum;
-        //err_tmp = constrain(err_tmp, 0.0, 179.0);
-
+        
+        err_tmp = ki*err_cum; // No nos hace falta hacer constrain porque lo hacemos arriba
         err_tmp += kp*err;
         err_tmp += kd*(err-last_err);
 
@@ -90,8 +91,7 @@ uint8_t pir(){
         
         last_err = err;
         
-        return new_angulo;
-        //return (uint8_t) floor(map_double(new_angulo, 0, kp*179+ki*179+kd*2*179, 0, 179.9));
+        return (uint8_t) floor(new_angulo);
     }
 }
 
